@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Document</title>
+  <style>
+  .main {
+    position:         absolute;
+    left:             50%;
+    top:              50%;
+    width:            550px;
+    height:           440px;
+    margin-left:      -275px;
+    margin-top:       -220px;
+    background-color: rgb(245,245,245);
+  }
+  .main h1 {
+    text-align:  center;
+    color:       rgb(234,215,215);
+    font-size:   100px;
+    font-weight: 100;
+    margin:      12px;
+  }
+  .new-to-do {
+    width:      100%;
+    box-sizing: border-box;
+    appearance: none;
+  }
+  </style>
+</head>
+<body>
+  <div id="todo" class="main">
+    <h1 class="title">todos</h1>
+    <input type="text" v-model="newToDo.content" v-on="keydown: addNewToDo | key 'enter'" class="new-to-do" placeholder="What needs to be done?">
+    <!-- <button v-on="click: addNewToDo">Add</button> -->
+    <ul>
+      <li v-repeat="todo in todos" v-on="click: todo.isCompleted = !todo.isCompleted">
+        {{todo.content}} - {{todo.isCompleted ? "已完成" : "进行中"}} - {{todo.startTime}}
+      </li>
+    </ul>
+  </div>
+  <script src="./node_modules/vue/dist/vue.min.js"></script>
+</body>
+</html>
+<script>
+  var demo = new Vue({
+    el: '#todo',
+    data: {
+      todos: [
+
+      ],
+      newToDo: {
+        content: null,
+        isCompleted: false,
+        startTime: null,
+      },
+    },
+    methods: {
+      addNewToDo: function() {
+        this.newToDo.startTime = new Date();
+        var newToDo = {
+          content:     this.newToDo.content,
+          isCompleted: false,
+          startTime:   this.newToDo.startTime
+        }
+        // 插入新纪录
+        this.todos.push(newToDo);
+
+        // 复原newToDo
+        this.newToDo.content = this.newToDo.startTime = null;
+      },
+      // 用于测试『改变任务状态』
+      onClick: function(index) {
+        console.log(this.todos[index].isCompleted);
+        this.todos[index].isCompleted = !this.todos[index].isCompleted;
+        // console.log('+' + JSON.stringify(this.$vm));
+      }
+    }
+  })
+</script>
